@@ -1,4 +1,4 @@
-# Sample Hardhat Project
+# Car Rental Service Project
 
 [![License](https://img.shields.io/badge/License-AGPLv3-green.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![CI Status](https://github.com/gretzke/hardhat-typescript-template/actions/workflows/tests.yml/badge.svg)](https://github.com/gretzke/hardhat-typescript-template/actions)
