@@ -5,7 +5,7 @@ let num: number;
 
 if (network.name === 'mainnet') {
   num = 1;
-} else if (network.name === 'goerli') {
+} else if (network.name === 'localhost') {
   num = 2;
 } else {
   throw new Error('Unsupported network');
@@ -14,7 +14,7 @@ if (network.name === 'mainnet') {
 async function main(): Promise<void> {
   const [deployer] = await ethers.getSigners();
   console.log('Deploying contract with account:', deployer.address);
-  const factory = await ethers.getContractFactory('TestContract');
+  const factory = await ethers.getContractFactory('CarRental');
   const contract = await factory.deploy(num);
   console.log('Contract address:', contract.address);
 }

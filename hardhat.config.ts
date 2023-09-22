@@ -1,3 +1,6 @@
+//Deploying contract with account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+//Contract address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
 import '@nomicfoundation/hardhat-toolbox';
 import '@openzeppelin/hardhat-upgrades';
 import '@primitivefi/hardhat-marmite';
@@ -35,8 +38,8 @@ const networks = () => {
   if (process.env.ENV === 'dev') {
     return {
       ...baseConfig.networks,
-      goerli: {
-        url: 'https://goerli.infura.io/v3/' + process.env.INFURA_TOKEN,
+      sepolia: {
+        url: 'https://sepolia.infura.io/v3/' + process.env.INFURA_TOKEN,
         accounts: {
           mnemonic: process.env.MNEMONIC_DEV as string,
         },
