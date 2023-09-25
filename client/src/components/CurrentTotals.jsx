@@ -6,6 +6,8 @@ import { FcMoneyTransfer, FcOvertime } from 'react-icons/fc';
 import PayForm from './Payform';
 import AddToBalanceForm from './AddToBalanceForm';
 import AddRenter from './AddRenter';
+import { useContext } from 'react';
+import { BlockchainContext } from '../context/BlockchainContext';
 
 function StatsCard(props) {
   const { title, stat, icon, bgColor } = props;
@@ -37,13 +39,14 @@ function StatsCard(props) {
 }
 
 export default function CurrentTotals() {
+  const { currentAccount, renterBalance } = useContext(BlockchainContext);
   return (
     <Box maxW="7xl" mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
       <chakra.h1 textAlign={'center'} fontSize={'4xl'} py={10} fontWeight={'bold'}>
-        Welcome 'User's Address', please select the car you would like to rent.
+        Welcome {currentAccount.slice(0, 5)}, please select the car you would like to rent.
       </chakra.h1>
       <SimpleGrid columns={{ base: 1, md: 4 }} spacing={{ base: 5, lg: 8 }}>
-        <StatsCard title={'Client Balance: '} stat={'5,000'} icon={<MdAccountBalance size={'3em'} />} />
+        <StatsCard title={'Client Balance: '} stat={renterBalance} icon={<MdAccountBalance size={'3em'} />} />
         <StatsCard title={'Amount Due: '} stat={'1,000'} icon={<FcMoneyTransfer size={'3em'} />} />
         <StatsCard title={'Driving Time in Minutes: '} stat={'7'} icon={<FcOvertime size={'3em'} />} />
         <StatsCard title={'Car Status: '} bgColor={'red'} />

@@ -1,15 +1,23 @@
 import { useForm } from 'react-hook-form';
 import { FormErrorMessage, FormLabel, FormControl, Input, Button, Text, Flex } from '@chakra-ui/react';
+import { useContext } from 'react';
+import { BlockchainContext } from '../context/BlockchainContext';
 
 export default function AddToBalanceForm() {
+  const { deposit } = useContext(BlockchainContext);
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const onSubmit = async (values) => {
-    console.log(JSON.stringify(values, null, 2));
+  const onSubmit = async (value) => {
+    console.log(JSON.stringify(value, null, 2));
+    console.log(value);
+    //const {creditBalance} = values;
+    //console.log(creditBalance);
+    await deposit(value);
+    console.log('Test');
   };
 
   return (

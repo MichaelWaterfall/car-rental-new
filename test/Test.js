@@ -97,10 +97,12 @@ describe('CarRental', function () {
 
   it('should be able to make deposit', async () => {
     const user1InitialBalance = await carRental.connect(user1).balanceOfRenter();
+    console.log('Before: ' + user1InitialBalance);
     const user1Deposit = await ethers.utils.parseEther('1');
     await carRental.connect(user1).deposit({ value: user1Deposit });
     expect(await carRental.connect(user1).balanceOfRenter()).to.be.equal(user1InitialBalance.add(user1Deposit));
     expect(await carRental.connect(deployer).balanceOf()).to.be.equal(user1Deposit);
+    console.log('After: ' + (await carRental.connect(user1).balanceOfRenter()));
   });
 
   it('should be able to make payment', async () => {
