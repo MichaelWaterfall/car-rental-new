@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { abi, contractAddress } from '../config.json';
-import { ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 
 export const BlockchainContext = React.createContext('');
 
@@ -55,7 +55,7 @@ export const BlockchainProvider = ({ children }) => {
     try {
       const balanceOf = await contractProvider.balanceOf();
       setBalance(balanceOf);
-      console.log(balance);
+      console.log('Contract Balance: ' + balanceOf);
     } catch (error) {
       console.log(error);
     }
@@ -112,12 +112,25 @@ export const BlockchainProvider = ({ children }) => {
 
   const deposit = async (value) => {
     try {
+      contractProvider.on('Deposit', (_from, amount) => {
+        console.log('New Transfer event with the arguments: ' + _from + ' ' + amount);
+        //console.log(_from, amount);
+      });
+    } catch (error) {
+      console.log(error);
+    } /*
+    contractProvider.on(contractProvider.filters.Deposit, (_from, amount) => {
+      console.log("New Transfer event with the arguments:");
+      console.log(_from, amount);
+    })*/
+    console.log('Deposit function');
+    try {
       console.log(currentAccount);
       const signer = await provider.getSigner();
       const contractSigner = new ethers.Contract(address, contractAbi, signer);
       const credit = ethers.parseEther(value.deposit);
-      console.log(credit);
-      const deposit = await contractSigner.deposit({ from: currentAccount, value: ethers.parseEther('1') });
+      //console.log(credit);
+      const deposit = await contractSigner.deposit({ from: currentAccount, value: credit });
       await deposit.wait();
       await getRenterBalance();
     } catch (error) {
@@ -126,6 +139,7 @@ export const BlockchainProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    getBalance();
     checkIfWalletConnected();
     checkRenterExists();
     getRenterBalance();

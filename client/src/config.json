@@ -12,6 +12,25 @@
       "type": "constructor"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Deposit",
+      "type": "event"
+    },
+    {
       "inputs": [],
       "name": "addRenter",
       "outputs": [],
@@ -273,5 +292,5 @@
       "type": "function"
     }
   ],
-  "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "contractAddress": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
 }

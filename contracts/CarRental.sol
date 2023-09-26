@@ -9,6 +9,8 @@ contract CarRental {
     uint public price;
     uint public counter;
 
+    event Deposit(address _from, uint amount);
+
     constructor(uint _price) {
         owner = msg.sender;
         price = _price;
@@ -113,6 +115,7 @@ contract CarRental {
 
     // Deposit
     function deposit() public payable {
+        emit Deposit(msg.sender, msg.value);
         renters[msg.sender].balance += msg.value;
     }
 
