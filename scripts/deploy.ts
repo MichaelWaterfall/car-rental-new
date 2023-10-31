@@ -15,7 +15,7 @@ async function main(): Promise<void> {
   const [deployer] = await ethers.getSigners();
   console.log('Deploying contract with account:', deployer.address);
   const factory = await ethers.getContractFactory('CarRental');
-  const contract = await factory.deploy(num);
+  const contract = await factory.deploy(1);
   console.log('Contract address:', contract.address);
 }
 

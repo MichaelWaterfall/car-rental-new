@@ -10,6 +10,10 @@ export const BlockchainProvider = ({ children }) => {
   const [renterExists, setRenterExists] = useState('');
   const [renter, setRenter] = useState('');
   const [renterBalance, setRenterBalance] = useState('');
+  const [due, setDue] = useState('');
+  const [canRent, setCanRent] = useState('');
+  const [timer, setTimer] = useState('');
+  const [duration, setDuration] = useState('');
   //const [creditBalance, setCreditBalance] = useState('');
 
   const provider = new ethers.BrowserProvider(window.ethereum);
@@ -110,6 +114,18 @@ export const BlockchainProvider = ({ children }) => {
     }
   };
 
+  const getDue = async () => {
+    try {
+      if (currentAccount) {
+        const dueAmount = await contractProvider.getDue(currentAccount);
+        setDue(ethers.formatEther(dueAmount));
+        console.log('Due: ', dueAmount);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deposit = async (value) => {
     try {
       contractProvider.on('Deposit', (_from, amount) => {
@@ -138,16 +154,128 @@ export const BlockchainProvider = ({ children }) => {
     }
   };
 
+  const checkOutCar = async () => {
+    console.log('Test checkOutCar');
+    try {
+      if (currentAccount) {
+        const signer = await provider.getSigner();
+        const contractSigner = new ethers.Contract(address, contractAbi, signer);
+        const outCar = await contractSigner.checkOutCar();
+        await outCar.wait();
+        //setTimer(true);
+        window.location.reload(false);
+        console.log('Car checked out');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkInCar = async () => {
+    console.log('Test checkInCar');
+    try {
+      if (currentAccount) {
+        const signer = await provider.getSigner();
+        const contractSigner = new ethers.Contract(address, contractAbi, signer);
+        const checkIn = await contractSigner.checkInCar();
+        checkIn.wait();
+        getTotalDuration();
+        //setDuration(duration);
+        //setDue(due);
+        window.location.reload(true);
+        //setTimer(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const payment = async () => {
+    console.log('Test payment');
+    try {
+      if (currentAccount) {
+        getDue();
+        const signer = await provider.getSigner();
+        const contractSigner = new ethers.Contract(address, contractAbi, signer);
+        console.log(
+          'Contract variable: ' + (await contractProvider.getDue(currentAccount)) + ' ' + 'Local variable: ' + due
+        );
+        await contractSigner.makePayment({ value: ethers.parseEther(due) });
+        //window.location.reload(false);
+        setDue(0);
+        setDuration(0);
+        setCanRent(true);
+        console.log('Payment complete');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCanRent = async () => {
+    console.log('Test getActive');
+    try {
+      const rentState = await contractProvider.canRentCar(currentAccount);
+      setCanRent(rentState);
+      console.log('canRent: ' + rentState);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTimer = async () => {
+    try {
+      if (currentAccount) {
+        const timer = await contractProvider.getTimer(currentAccount);
+        setTimer(timer);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTotalDuration = async () => {
+    console.log('TestD');
+    try {
+      if (currentAccount) {
+        console.log('TestDD');
+        const duration = await contractProvider.getTotalDuration(currentAccount);
+        console.log('Duration: ' + Number(duration));
+        setDuration(duration);
+      }
+    } catch (error) {
+      console.log();
+    }
+  };
+
   useEffect(() => {
     getBalance();
     checkIfWalletConnected();
     checkRenterExists();
     getRenterBalance();
+    getDue();
+    getCanRent();
+    getTimer();
+    getTotalDuration();
+    //console.log(due);
   }, [currentAccount]);
 
   return (
     <BlockchainContext.Provider
-      value={{ connectWallet, currentAccount, renterExists, addRenter, renterBalance, deposit }}
+      value={{
+        connectWallet,
+        currentAccount,
+        due,
+        renterExists,
+        addRenter,
+        renterBalance,
+        checkOutCar,
+        checkInCar,
+        payment,
+        canRent,
+        timer,
+        duration,
+      }}
     >
       {children}
     </BlockchainContext.Provider>

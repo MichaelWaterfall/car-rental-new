@@ -26,7 +26,8 @@ contract CarRental {
         uint id;
         bool canRent;
         bool active;
-        uint balance;
+        bool timer;
+        //uint balance;
         uint due;
         uint start;
         uint end;
@@ -37,7 +38,7 @@ contract CarRental {
     function addRenter() external {
         require(msg.sender != owner, "The owner cannot rent a car");
         counter += 1;
-        renters[msg.sender] = Renter(payable(msg.sender), counter, true, false, 0, 0, 0, 0);
+        renters[msg.sender] = Renter(payable(msg.sender), counter, true, false, false, 0, 0, 0);
     }
 
     function getRenterId() external view returns (uint) {
@@ -57,10 +58,11 @@ contract CarRental {
 
     // Get Contract Balance
 
+    /*
     function balanceOf() public view returns (uint) {
         return address(this).balance;
     }
-
+    */
     /*
     function getOwnerBalance() view public onlyOwner() returns (uint) {
         return ownerBalance;
@@ -77,13 +79,16 @@ contract CarRental {
         renters[msg.sender].active = true;
         renters[msg.sender].start = block.timestamp;
         renters[msg.sender].canRent = false;
+        renters[msg.sender].timer = true;
     }
 
     function checkInCar() external {
         require(renters[msg.sender].active == true, "Please check out a car first");
+        require(block.timestamp - renters[msg.sender].start > 60, "You must rent a car for a minimum of 1 minute");
         renters[msg.sender].active = false;
         renters[msg.sender].end = block.timestamp;
-        setDue();
+        renters[msg.sender].timer = false;
+        setDue(msg.sender);
     }
 
     // Get total duration of car use
@@ -91,55 +96,58 @@ contract CarRental {
         return end - start;
     }
 
-    function getTotalDuration() internal view returns (uint) {
-        uint timespan = renterTimespan(renters[msg.sender].start, renters[msg.sender].end);
+    function getTotalDuration(address walletAddress) public view returns (uint) {
+        uint timespan = renterTimespan(renters[walletAddress].start, renters[walletAddress].end);
         uint timespanInMinutes = timespan / 60;
         return timespanInMinutes;
     }
 
     // Get Renter's balance
     function balanceOfRenter() public view returns (uint) {
-        return renters[msg.sender].balance;
+        return address(msg.sender).balance;
     }
 
     // Set Due amount
-    function setDue() internal {
-        uint timespanMinutes = getTotalDuration();
-        uint fiveMinuteIncrements = timespanMinutes / 5;
-        renters[msg.sender].due = fiveMinuteIncrements * price;
+    function setDue(address walletAddress) internal {
+        uint timespanMinutes = getTotalDuration(walletAddress);
+        uint minuteIncrements = timespanMinutes / 1;
+        renters[walletAddress].due = minuteIncrements * price;
     }
 
-    function canRentCar() external view returns (bool) {
-        return renters[msg.sender].canRent;
+    function canRentCar(address walletAddress) external view returns (bool) {
+        return renters[walletAddress].canRent;
     }
 
-    // Deposit
+    /* Deposit
     function deposit() public payable {
         emit Deposit(msg.sender, msg.value);
         renters[msg.sender].balance += msg.value;
     }
-
+    */
     // Make Payment
-    function makePayment() public {
+    function makePayment() public payable {
         console.log("Msg.sender: ", msg.sender);
         require(msg.sender != owner, "Owner cannot make a payment");
-        require(renters[msg.sender].due > 0, "You do not have anything due at this time");
+        //require(renters[msg.sender].canRent = false, "Please rent a car");
+        //require(renters[msg.sender].due > 0, "You do not have anything due at this time");
+        uint balance = address(msg.sender).balance;
         require(
-            renters[msg.sender].balance >= renters[msg.sender].due,
+            balance >= renters[msg.sender].due,
             "You do not have enough funds to cover payment. Please make a deposit"
         );
-        renters[msg.sender].balance -= renters[msg.sender].due;
+        //renters[msg.sender].balance -= renters[msg.sender].due;
         uint payment = renters[msg.sender].due;
+        require(msg.value == payment, "Please only send the amount due");
         renters[msg.sender].canRent = true;
         renters[msg.sender].due = 0;
         renters[msg.sender].start = 0;
         renters[msg.sender].end = 0;
-        (bool success, ) = owner.call{value: payment}("");
+        (bool success, ) = owner.call{value: msg.value}("");
         require(success, "Ether failed to send");
     }
 
-    function getDue() external view returns (uint) {
-        return renters[msg.sender].due;
+    function getDue(address walletAddress) external view returns (uint) {
+        return renters[walletAddress].due;
     }
 
     function getRenter() external view returns (uint, bool, bool) {
@@ -154,5 +162,9 @@ contract CarRental {
             return true;
         }
         return false;
+    }
+
+    function getTimer(address walletAddress) public view returns (bool) {
+        return renters[walletAddress].timer;
     }
 }

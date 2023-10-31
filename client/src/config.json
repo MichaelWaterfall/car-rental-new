@@ -64,7 +64,13 @@
       "type": "function"
     },
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        }
+      ],
       "name": "canRentCar",
       "outputs": [
         {
@@ -130,14 +136,13 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "deposit",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        }
+      ],
       "name": "getDue",
       "outputs": [
         {
@@ -186,10 +191,48 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getTimer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getTotalDuration",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "makePayment",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -268,9 +311,9 @@
           "type": "bool"
         },
         {
-          "internalType": "uint256",
-          "name": "balance",
-          "type": "uint256"
+          "internalType": "bool",
+          "name": "timer",
+          "type": "bool"
         },
         {
           "internalType": "uint256",
@@ -292,5 +335,5 @@
       "type": "function"
     }
   ],
-  "contractAddress": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+  "contractAddress": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
 }

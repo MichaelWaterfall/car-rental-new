@@ -21,6 +21,7 @@ export default function AddToBalanceForm() {
   };
 
   return (
+    /*
     <Flex justifyContent={'center'} alignItems={'center'} p={5} mt={10}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Text fontFamily={'heading'} fontSize={'x-large'} fontWeight={600} mb={4}>
@@ -43,5 +44,7 @@ export default function AddToBalanceForm() {
         </Button>
       </form>
     </Flex>
+    */
+    <></>
   );
 }
