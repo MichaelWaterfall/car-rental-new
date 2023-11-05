@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { ethers, network, upgrades } from 'hardhat';
-
+/*
 let num: number;
 
 if (network.name === 'mainnet') {
@@ -10,7 +10,7 @@ if (network.name === 'mainnet') {
 } else {
   throw new Error('Unsupported network');
 }
-
+*/
 async function main(): Promise<void> {
   const [deployer] = await ethers.getSigners();
   console.log('Deploying contract with account:', deployer.address);

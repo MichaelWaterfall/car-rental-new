@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.19;
 
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 contract CarRental {
     address public owner;
@@ -126,7 +126,7 @@ contract CarRental {
     */
     // Make Payment
     function makePayment() public payable {
-        console.log("Msg.sender: ", msg.sender);
+        //console.log("Msg.sender: ", msg.sender);
         require(msg.sender != owner, "Owner cannot make a payment");
         //require(renters[msg.sender].canRent = false, "Please rent a car");
         //require(renters[msg.sender].due > 0, "You do not have anything due at this time");
